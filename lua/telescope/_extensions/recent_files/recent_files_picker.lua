@@ -26,7 +26,7 @@ local recent_bufs = {}
 local recent_cnt = 0
 
 M.setup = function(opts)
-  options = utils.assign({}, defaults, opts)
+  options = utils.shallowOverride({}, defaults, opts)
 end
 
 --We keep track of recent buffer by listening to BufEnter events,
@@ -147,8 +147,8 @@ M.pick = function(opts)
   if not options then
     error("Plugin is not set up, call require('telescope').load_extension('recent_files')")
   end
-  opts = utils.assign({}, options, opts)
-  pickers.new(opts, {
+  opts = utils.shallowOverride({}, options, opts)
+  local picker = pickers.new(opts, {
     prompt_title = "Recent files",
     finder = finders.new_table {
       results = prepare_recent_files(opts),
@@ -156,7 +156,9 @@ M.pick = function(opts)
     },
     sorter = conf.file_sorter(),
     previewer = conf.file_previewer(opts)
-  }):find()
+  })
+  picker:find();
+  return picker
 end
 
 return M

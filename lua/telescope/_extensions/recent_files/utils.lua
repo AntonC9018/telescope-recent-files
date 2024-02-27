@@ -1,21 +1,17 @@
 local M = {}
 
----Same as Object.assign() in JavaScript
-M.assign = function(...)
-  local n = select("#", ...)
-  if n == 0 then
-    return nil
-  end
-  local res = select(1, ...) or {}
-  for i = 2, n do
-    local t = select(i, ...)
-    if t then
-      for k, v in pairs(t) do
-        res[k] = v
-      end
+M.shallowOverride = function(a, ...)
+    local res = a or {}
+    local number_of_args = select('#', ...)
+    for i = 1, number_of_args do
+        local b = select(i, ...)
+        if b ~= nil then
+            for k, v in pairs(b) do
+                res[k] = v
+            end
+        end
     end
-  end
-  return res
+    return res
 end
 
 return M
